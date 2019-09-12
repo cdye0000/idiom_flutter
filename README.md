@@ -1,6 +1,6 @@
 # idiom_flutter
 
-A new Flutter application.
+A  Flutter application demo.
 
 ## Getting Started
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:idiom_flutter/vo/idiomvo.dart';
+import 'package:idiom_flutter/widget/loading_dialog.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +20,7 @@ class _FileState extends State<FilePage>{
   String url='http://pwoir4hbn.bkt.clouddn.com/idiom.db';
   String word;
   bool loading=false;
+  Function function;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,6 +61,7 @@ class _FileState extends State<FilePage>{
 
   _downloadFile(String url,String path) async{
 
+    _showDialog();
     int start=0;
     var tempDir = await getTemporaryDirectory();
     if(!tempDir.existsSync()){
@@ -98,9 +101,13 @@ class _FileState extends State<FilePage>{
 //      DataPlugin.toast('$path');
 //      print(response.statusCode);
       print('下载完成');
+
+      function();
       _saveTime();
+      exit(0);
       _clickQuery();
     }on DioError catch (error){
+      function();
       print(error);
       DataPlugin.toast('${error}');
       File file=new File(path);
@@ -114,6 +121,14 @@ class _FileState extends State<FilePage>{
     }
 
 
+
+  }
+
+  _showDialog(){
+    showDialog(context: this.context,builder: (context)=>LoadingDialog(dismissDialog: _dismissDialog,),);
+  }
+  _dismissDialog(Function function){
+    this.function=function;
 
   }
   _saveTime()async{

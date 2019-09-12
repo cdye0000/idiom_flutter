@@ -1,10 +1,9 @@
-import 'package:data_plugin/bmob/bmob_query.dart';
 import 'package:flutter/material.dart';
 import 'package:idiom_flutter/db/datebase_helper.dart';
 import 'package:idiom_flutter/db/db_idiom.dart';
+import 'package:idiom_flutter/pages/idiom_detail_page.dart';
 import 'package:idiom_flutter/vo/idiomvo.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 class SearchPage extends StatefulWidget {
@@ -52,42 +51,19 @@ class _SearchPageState extends State<SearchPage> {
     });
     _controller.resetLoadState();
 
-//    _queryList(keywords: keywords).then((list){
-//      setState(() {
-//        _list.clear();
-//
-//        page++;
-//      });
-//      _controller.resetLoadState();
-//    }
-
-//    );
   }
   Future _load()async{
-//    _queryList(pageNumber: page,keywords: keywords).then((list){
-//      setState(() {
-//        list.forEach((e){
-//          Idiom idiomVo = Idiom();
-//          idiomVo.word = e['word'];
-//          idiomVo.pinyin = e['pinyin'];
-//          idiomVo.derivation = e['derivation'];
-//          idiomVo.explanation = e['explanation'];
-//          idiomVo.example = e['example'];
-//          idiomVo.abbreviation = e['abbreviation'];
-//          _list.add(idiomVo);
-//
-//        });
-//        page++;
-//      });
-//      _controller.finishLoad(noMore: list.length<15);
-//    }
+    var list = await _queryList(keywords: keywords,pageNumber: page);
+    setState(() {
+      _list.addAll(list);
+      page++;
+    });
+    _controller.finishLoad(noMore: list.length<15);
 
-//    );
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _dbUtils=IdiomDBUtils();
     _controller = EasyRefreshController();
@@ -111,8 +87,7 @@ class _SearchPageState extends State<SearchPage> {
           child: Column(
             children: <Widget>[
               Container(
-                height: 50,
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: EdgeInsets.only(left: 20, right: 20,top: 10,bottom: 10),
                 child: TextField(controller: _textEditingController,maxLength:4,decoration: InputDecoration.collapsed(hintText: '输入关键字'),),
               ),
               Expanded(
@@ -120,7 +95,10 @@ class _SearchPageState extends State<SearchPage> {
                 child: ListView.builder(
                   itemCount: _list == null ? 0 : _list.length,
                   itemBuilder: (context, index) =>
-                      ListTile(title: Text('${_list[index].word}')),
+                      ListTile(title: Text('${_list[index].word}'),onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>IdiomDetailPage(idiom:_list[index])));
+
+                      },),
                 ),
                 enableControlFinishRefresh: false,
                 enableControlFinishLoad: true,

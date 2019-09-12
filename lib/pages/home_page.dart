@@ -1,22 +1,18 @@
-import 'dart:io';
 
 import 'package:data_plugin/bmob/bmob_query.dart';
-import 'package:data_plugin/data_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:idiom_flutter/db/db_idiom.dart';
 import 'dart:math';
 import 'package:idiom_flutter/vo/idiomvo.dart';
 import 'package:idiom_flutter/vo/version.dart';
 import 'package:package_info/package_info.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:idiom_flutter/widget/idiom_detail.dart';
+
 class HomePage extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _HomePageState();
   }
 
@@ -190,30 +186,8 @@ class _HomePageState extends State<HomePage>{
               ],
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(top: 30),
-            child: Text('${_idiomVo==null?'':_idiomVo.word}',style: wordStyle,),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 10),
-            child:  Text('拼音',style: titleStyle,),
-          ),
-          Text('${_idiomVo==null?'无':_idiomVo.pinyin}'),
-          Container(
-            margin: EdgeInsets.only(top: 10),
-            child: Text('解释',style: titleStyle,),
-          ),
-          Text('${_idiomVo==null?'无':_idiomVo.explanation}'),
-          Container(
-            margin: EdgeInsets.only(top: 10),
-            child:  Text('出处',style: titleStyle,),
-          ),
-          Text('${_idiomVo==null?'无':_idiomVo.derivation}'),
-          Container(
-            margin: EdgeInsets.only(top: 10),
-            child:  Text('示例',style: titleStyle,),
-          ),
-          Text('${_idiomVo==null?'无':_idiomVo.example}'),
+          Container(padding:EdgeInsets.only(top: 20),child:IdiomDetail(_idiomVo),),
+
 
         ],
       ),
